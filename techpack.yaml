@@ -1,0 +1,106 @@
+# Show Time — Claude Code development workflow techpack
+# Schema: https://github.com/mcs-cli/mcs/blob/main/docs/techpack-schema.md
+# Guide: https://github.com/mcs-cli/mcs/blob/main/docs/creating-tech-packs.md
+
+schemaVersion: 1
+identifier: show-time
+displayName: Show Time
+description: Git worktree management, release pipelines, PR quality gates, plan management, and documentation automation for Claude Code
+
+components:
+  # ── Commands — Git Worktree Management ───────────────────────
+  - id: cmd-create-worktree
+    displayName: /create_worktree_prompt
+    description: Create a git worktree with isolated port configuration for parallel web development
+    command:
+      source: .claude/commands/create_worktree_prompt.md
+      destination: create_worktree_prompt.md
+
+  - id: cmd-create-mobile-worktree
+    displayName: /create_mobile_worktree_prompt
+    description: Create a mobile git worktree from feature title with JIRA ticket support
+    command:
+      source: .claude/commands/create_mobile_worktree_prompt.md
+      destination: create_mobile_worktree_prompt.md
+
+  - id: cmd-list-worktrees
+    displayName: /list_worktrees_prompt
+    description: List all git worktrees with configuration, service status, and port assignments
+    command:
+      source: .claude/commands/list_worktrees_prompt.md
+      destination: list_worktrees_prompt.md
+
+  - id: cmd-remove-worktree
+    displayName: /remove_worktree_prompt
+    description: Safely remove a git worktree, stop services, and delete the branch
+    command:
+      source: .claude/commands/remove_worktree_prompt.md
+      destination: remove_worktree_prompt.md
+
+  # ── Skills — Worktree Management ─────────────────────────────
+  - id: skill-worktree-manager
+    displayName: Worktree Manager
+    description: Comprehensive git worktree lifecycle management for web and mobile iOS projects
+    dependencies: [cmd-create-worktree, cmd-create-mobile-worktree, cmd-list-worktrees, cmd-remove-worktree]
+    skill:
+      source: .claude/skills/worktree-manager-skill
+      destination: worktree-manager-skill
+
+  # ── Skills — Release Pipeline ────────────────────────────────
+  - id: skill-show-time
+    displayName: Show Time
+    description: Full release pipeline — contextual commits, docs update, security review, PR creation, and adversarial 3-agent code review
+    dependencies: [skill-create-pr, skill-docs-update]
+    skill:
+      source: .claude/skills/show-time-skill
+      destination: show-time-skill
+
+  - id: skill-create-pr
+    displayName: Create PR
+    description: Run quality checks (lint, typecheck, unit tests, integration tests) and create a PR
+    skill:
+      source: .claude/skills/create-pr-skill
+      destination: create-pr-skill
+
+  # ── Skills — Documentation & Planning ────────────────────────
+  - id: skill-docs-update
+    displayName: Docs Update
+    description: Automatically update documentation (API specs, ERD, business logic, features) when code changes
+    skill:
+      source: .claude/skills/docs-update-skill
+      destination: docs-update-skill
+
+  - id: skill-plan-manager
+    displayName: Plan Manager
+    description: Create and manage implementation plans in docs/PLANS with TO-DO, IN-PROGRESS, and COMPLETED stages
+    skill:
+      source: .claude/skills/plan-manager-skill
+      destination: plan-manager-skill
+
+  - id: skill-raw-docs-processor
+    displayName: Raw Docs Processor
+    description: Process folders of screenshot PNGs into structured markdown documentation
+    skill:
+      source: .claude/skills/raw-docs-processor-skill
+      destination: raw-docs-processor-skill
+
+  # ── Skills — Monorepo Utilities ──────────────────────────────
+  - id: skill-env-variable
+    displayName: Environment Variable
+    description: Add environment variables consistently across all monorepo configuration files
+    skill:
+      source: .claude/skills/env-variable-skill
+      destination: env-variable-skill
+
+  # ── Configuration ────────────────────────────────────────────
+  - id: settings
+    description: Claude Code permission settings
+    isRequired: true
+    settingsFile: .claude/settings.json
+
+  - id: gitignore
+    description: Global gitignore entries for Claude Code
+    isRequired: true
+    gitignore:
+      - .claude/settings.local.json
+      - .agents/

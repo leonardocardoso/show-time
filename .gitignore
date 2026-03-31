@@ -1,0 +1,6 @@
+.claude/settings.local.json
+.claude/CLAUDE.md
+.claude/commands/CLAUDE.md
+.agents/
+.DS_Store
+skills-lock.json
