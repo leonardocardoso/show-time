@@ -6,6 +6,7 @@ schemaVersion: 1
 identifier: show-time
 displayName: Show Time
 description: Git worktree management, release pipelines, PR quality gates, plan management, and documentation automation for Claude Code
+author: Leonardo Cardoso
 
 components:
   # ── Commands — Git Worktree Management ───────────────────────
